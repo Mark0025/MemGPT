@@ -1,10 +1,10 @@
-from ..constants import FUNCTION_PARAM_DESCRIPTION_REQ_HEARTBEAT
+from ..constants import FUNCTION_PARAM_DESCRIPTION_REQ_HEARTBEAT, MAX_PAUSE_HEARTBEATS
 
 # FUNCTIONS_PROMPT_MULTISTEP_NO_HEARTBEATS = FUNCTIONS_PROMPT_MULTISTEP[:-1]
 FUNCTIONS_CHAINING = {
     "send_message": {
         "name": "send_message",
-        "description": "Sends a message to the human user",
+        "description": "Sends a message to the human user.",
         "parameters": {
             "type": "object",
             "properties": {
@@ -26,7 +26,7 @@ FUNCTIONS_CHAINING = {
                 # https://json-schema.org/understanding-json-schema/reference/array.html
                 "minutes": {
                     "type": "integer",
-                    "description": "Number of minutes to ignore heartbeats for. Max value of 360 minutes (6 hours).",
+                    "description": f"Number of minutes to ignore heartbeats for. Max value of {MAX_PAUSE_HEARTBEATS} minutes ({MAX_PAUSE_HEARTBEATS//60} hours).",
                 },
             },
             "required": ["minutes"],
@@ -45,7 +45,7 @@ FUNCTIONS_CHAINING = {
                 },
                 "request_heartbeat": {
                     "type": "boolean",
-                    "description": "Request an immediate heartbeat after function execution, use to chain multiple functions.",
+                    "description": FUNCTION_PARAM_DESCRIPTION_REQ_HEARTBEAT,
                 },
             },
             "required": ["message", "request_heartbeat"],
@@ -67,7 +67,7 @@ FUNCTIONS_CHAINING = {
                 },
                 "request_heartbeat": {
                     "type": "boolean",
-                    "description": "Request an immediate heartbeat after function execution, use to chain multiple functions.",
+                    "description": FUNCTION_PARAM_DESCRIPTION_REQ_HEARTBEAT,
                 },
             },
             "required": ["name", "content", "request_heartbeat"],
@@ -93,7 +93,7 @@ FUNCTIONS_CHAINING = {
                 },
                 "request_heartbeat": {
                     "type": "boolean",
-                    "description": "Request an immediate heartbeat after function execution, use to chain multiple functions.",
+                    "description": FUNCTION_PARAM_DESCRIPTION_REQ_HEARTBEAT,
                 },
             },
             "required": ["name", "old_content", "new_content", "request_heartbeat"],
@@ -118,7 +118,7 @@ FUNCTIONS_CHAINING = {
                     "description": FUNCTION_PARAM_DESCRIPTION_REQ_HEARTBEAT,
                 },
             },
-            "required": ["name", "page", "request_heartbeat"],
+            "required": ["query", "page", "request_heartbeat"],
         },
     },
     "conversation_search": {
@@ -140,7 +140,7 @@ FUNCTIONS_CHAINING = {
                     "description": FUNCTION_PARAM_DESCRIPTION_REQ_HEARTBEAT,
                 },
             },
-            "required": ["name", "page", "request_heartbeat"],
+            "required": ["query", "request_heartbeat"],
         },
     },
     "recall_memory_search_date": {
@@ -166,7 +166,7 @@ FUNCTIONS_CHAINING = {
                     "description": FUNCTION_PARAM_DESCRIPTION_REQ_HEARTBEAT,
                 },
             },
-            "required": ["name", "page", "request_heartbeat"],
+            "required": ["start_date", "end_date", "page", "request_heartbeat"],
         },
     },
     "conversation_search_date": {
@@ -192,7 +192,7 @@ FUNCTIONS_CHAINING = {
                     "description": FUNCTION_PARAM_DESCRIPTION_REQ_HEARTBEAT,
                 },
             },
-            "required": ["name", "page", "request_heartbeat"],
+            "required": ["start_date", "end_date", "request_heartbeat"],
         },
     },
     "archival_memory_insert": {
@@ -210,7 +210,7 @@ FUNCTIONS_CHAINING = {
                     "description": FUNCTION_PARAM_DESCRIPTION_REQ_HEARTBEAT,
                 },
             },
-            "required": ["name", "content", "request_heartbeat"],
+            "required": ["content", "request_heartbeat"],
         },
     },
     "archival_memory_search": {
@@ -232,7 +232,81 @@ FUNCTIONS_CHAINING = {
                     "description": FUNCTION_PARAM_DESCRIPTION_REQ_HEARTBEAT,
                 },
             },
-            "required": ["name", "query", "page", "request_heartbeat"],
+            "required": ["query", "request_heartbeat"],
+        },
+    },
+    "read_from_text_file": {
+        "name": "read_from_text_file",
+        "description": "Read lines from a text file.",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "filename": {
+                    "type": "string",
+                    "description": "The name of the file to read.",
+                },
+                "line_start": {
+                    "type": "integer",
+                    "description": "Line to start reading from.",
+                },
+                "num_lines": {
+                    "type": "integer",
+                    "description": "How many lines to read (defaults to 1).",
+                },
+                "request_heartbeat": {
+                    "type": "boolean",
+                    "description": FUNCTION_PARAM_DESCRIPTION_REQ_HEARTBEAT,
+                },
+            },
+            "required": ["filename", "line_start", "request_heartbeat"],
+        },
+    },
+    "append_to_text_file": {
+        "name": "append_to_text_file",
+        "description": "Append to a text file.",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "filename": {
+                    "type": "string",
+                    "description": "The name of the file to append to.",
+                },
+                "content": {
+                    "type": "string",
+                    "description": "Content to append to the file.",
+                },
+                "request_heartbeat": {
+                    "type": "boolean",
+                    "description": FUNCTION_PARAM_DESCRIPTION_REQ_HEARTBEAT,
+                },
+            },
+            "required": ["filename", "content", "request_heartbeat"],
+        },
+    },
+    "http_request": {
+        "name": "http_request",
+        "description": "Generates an HTTP request and returns the response.",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "method": {
+                    "type": "string",
+                    "description": "The HTTP method (e.g., 'GET', 'POST').",
+                },
+                "url": {
+                    "type": "string",
+                    "description": "The URL for the request.",
+                },
+                "payload_json": {
+                    "type": "string",
+                    "description": "A JSON string representing the request payload.",
+                },
+                "request_heartbeat": {
+                    "type": "boolean",
+                    "description": FUNCTION_PARAM_DESCRIPTION_REQ_HEARTBEAT,
+                },
+            },
+            "required": ["method", "url", "request_heartbeat"],
         },
     },
 }
