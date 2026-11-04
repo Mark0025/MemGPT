@@ -2,6 +2,13 @@
 
 # [MemGPT](https://memgpt.ai)
 
+## About
+- **What it is:** A copy of the MemGPT (now Letta) project that gives AI chatbots long-term memory; Mark only synced it with the original.
+- **Business:** learning
+- **Status:** inactive since 2023-11
+- **Source:** agent research 2026-11-04
+
+
 <div align="center">
 
  <strong>Try out our MemGPT chatbot on <a href="https://discord.gg/9GEQrxmVyE">Discord</a>!</strong>
